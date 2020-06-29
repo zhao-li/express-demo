@@ -1,7 +1,12 @@
 const request = require('supertest')
-const app = require('../index')
 
 describe('GET /baskets', () => {
+  let app;
+  beforeEach(() => {
+    delete require.cache[require.resolve('../index')]
+    app = require('../index')
+  })
+
   it('responds with a 200 and a message about baskets', (done) => {
     request(app)
       .get('/baskets')
@@ -18,6 +23,11 @@ describe('GET /baskets', () => {
 })
 
 describe('POST /baskets', () => {
+  let app;
+  beforeEach(() => {
+    delete require.cache[require.resolve('../index')]
+    app = require('../index')
+  })
   let newValidBasket = {
     "basketId": 45,
     "basketName": "Lean & Green",
@@ -26,7 +36,7 @@ describe('POST /baskets', () => {
 
   let newBasketMissingFields = {
     "basketId": 98,
-    "basketPriceInUSD": 25
+    "basketName": "Imprisoning Free Radicals"
   }
   it('can accept a basket object', (done) => {
     request(app)
@@ -41,7 +51,7 @@ describe('POST /baskets', () => {
       })
   })
 
-  it('responds with a 422 when paylod does not contain required fields', (done) => {
+  it('responds with a 422 when payload does not contain required fields', (done) => {
     request(app)
       .post('/baskets')
       .send(newBasketMissingFields)
